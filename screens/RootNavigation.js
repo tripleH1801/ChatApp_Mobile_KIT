@@ -3,8 +3,6 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
 
 import MainTab from './MainTab';
-import LoginScreen from './LoginScreen';
-import RegisterScreen from './RegisterScreen';
 import ProfileUserScreen from './ProfileUserScreen';
 import AccountSettingScreen from './AccountSettingScreen'
 import ProfileSettingScreen from './ProfileSettingScreen';

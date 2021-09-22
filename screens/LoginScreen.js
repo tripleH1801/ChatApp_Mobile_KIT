@@ -5,27 +5,34 @@ import Background from '../components/Background'
 import Logo from '../components/Logo'
 import Button from '../components/Button'
 import TextInput from '../components/TextInput'
-import BackButton from '../components/BackButton'
 import { theme } from '../core/theme'
 import { useNavigation } from '@react-navigation/core'
-import { AuthContext } from '../context/Context'
+import { useDispatch, useSelector } from 'react-redux'
+import { login } from '../redux/actions/authAction'
+// import { AuthContext } from '../context/Context'
 // import { emailValidator } from '../helpers/emailValidator'
 // import { passwordValidator } from '../helpers/passwordValidator'
 
 export default function LoginScreen() {
+    const dispatch = useDispatch();
+    const auth = useSelector(state => state.auth);
+
     const [phoneNumber, setPhoneNumber] = useState({ value: '', error: '' })
     const [password, setPassword] = useState({ value: '', error: '' })
 
     const navigation = useNavigation();
-    const { signIn } = React.useContext(AuthContext);
+    // const { signIn } = React.useContext(AuthContext);
 
     const onLoginPressed = () => {
-        signIn(phoneNumber.value, password.value);
+        const dataLogin = {
+            phoneNumber: phoneNumber.value,
+            password: password.value
+        }
+        dispatch(login(dataLogin));
     }
 
     return (
         <Background>
-            {/* <BackButton goBack={navigation.goBack} /> */}
             <Logo />
             <Text style={styles.header}> ĐĂNG NHẬP </Text>
             <TextInput

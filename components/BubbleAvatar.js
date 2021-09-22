@@ -2,8 +2,10 @@ import React from 'react'
 import { View, Text, Image } from 'react-native'
 import { StyleSheet } from "react-native";
 import { responsiveFontSize, responsiveHeight } from "react-native-responsive-dimensions";
+import { useSelector } from 'react-redux';
 
 const BubbleAvatar = ({user}) => {
+    const isDarkTheme = useSelector(state => state.theme)
     return (
         <View style={styles.imageWrapper}>
         <Image
@@ -12,7 +14,7 @@ const BubbleAvatar = ({user}) => {
             }}
             style={styles.userAvatar}
         />
-        {/* {user.status && <View style={styles.activeIcon}></View>} */}
+        {/* {user.status && <View style={[styles.activeIcon, isDarkTheme? {borderColor: '#000'} : {borderColor: '#fff'}]}></View>} */}
     </View>
     )
 }
@@ -36,7 +38,6 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 3,
         borderStyle: 'solid',
-        borderColor: '#000',
         backgroundColor: '#18be12'
     },
 })

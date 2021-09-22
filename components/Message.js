@@ -192,6 +192,14 @@ const Message = ({ message, index, idRoom }) => {
                     id: 'u1',
                     name: 'Vadim',
                 },
+            }, {
+                id: 'm16',
+                content: 'Big Data is 4.',
+                createdAt: '2021-08-03T14:53:00.000Z',
+                user: {
+                    id: 'u1',
+                    name: 'Vadim',
+                },
             }]
         },
         {
@@ -325,7 +333,7 @@ const Message = ({ message, index, idRoom }) => {
             }]
         },]
 
-    // TÌM TIN NHẮN TRC ĐÓ ĐỂ TẠO ĐƯỜNG LINE NGĂN CÁCH TIN NHẮN GIỮA 1 KHOẢNG T/G DÀI, SẴN TIỆN LÀM HIỆU ỨNG TIN NHẮN
+    // TÌM TIN NHẮN TRC ĐÓ ĐỂ TẠO ĐƯỜNG LINE NGĂN CÁCH TIN NHẮN GIỮA 1 KHOẢNG T/G DÀI, SẴN TIỆN LÀM HIỆU ỨNG TIN NHẮN NẾU CẦN
     // lay tin nhan trc do
     // dung api lay message nằm trc, dùng biến index (đã dc truyền bên ChatScreen)
     const messageBefore =
@@ -343,6 +351,13 @@ const Message = ({ message, index, idRoom }) => {
         })?.messages[index + 1];
     const isSameMessOFUserAfter = messageAfter?.user.id === message.user.id;
 
+    // xac dinh room > 2user ?
+    const userCount =
+        Chats.find((item) => {
+            return idRoom == item.id;
+        }).users.length;
+    const isMultiUser = userCount > 2;
+
     // ko can quan tam ==============================================================================
     // xac dinh vi tri message
     const isHeader = !isSameMessOFUserBefore && isSameMessOFUserAfter;
@@ -351,9 +366,14 @@ const Message = ({ message, index, idRoom }) => {
     // ===============================================================================================
 
     const isMyMessage = message.user.id === 'u1'
+
     const userImgUri = Users.find((user) => {
         return user.id == message.user.id;
-    })?.imageUri;
+    }).imageUri;
+
+    const userName = Users.find((user) => {
+        return user.id == message.user.id;
+    }).name;
 
     if (isMyMessage) {
         return (
@@ -363,14 +383,17 @@ const Message = ({ message, index, idRoom }) => {
                     { marginBottom: 5 }
                 ]}
             >
-                <Text style={[
-                    styles.message,
-                    styles.myMessage,
-                    theme.dark ? styles.myDarkMessage : styles.myLightMessage
-                ]}>
-                    {message.content}
-                </Text>
-                {!messageAfter ?
+
+                <View style={styles.messageWrapper}>
+                    <Text style={[
+                        styles.message,
+                        styles.myMessage,
+                        theme.dark ? styles.myDarkMessage : styles.myLightMessage
+                    ]}>
+                        {message.content}
+                    </Text>
+                </View>
+                {!messageAfter ? //them dieu kien da seen
                     <Image source={{ uri: '' + userImgUri }} style={styles.smallAvatar} /> :
                     <View style={styles.smallAvatar} />
                 }
@@ -381,12 +404,17 @@ const Message = ({ message, index, idRoom }) => {
         return (
             <View style={[styles.container, { marginBottom: 5 }]}>
                 <Image source={{ uri: '' + userImgUri }} style={styles.avatar} />
-                <Text style={[
-                    styles.message,
-                    theme.dark ? styles.darkMessage : styles.lightMessage
-                ]}>
-                    {message.content}
-                </Text>
+                <View style={styles.messageWrapper}>
+
+                    {/* {isMultiUser && <PaperText>{userName}</PaperText> } */}
+
+                    <Text style={[
+                        styles.message,
+                        theme.dark ? styles.darkMessage : styles.lightMessage
+                    ]}>
+                        {message.content}
+                    </Text>
+                </View>
             </View>
         )
     }
@@ -407,8 +435,11 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
         justifyContent: 'flex-end',
     },
-    message: {
+    messageWrapper: {
         maxWidth: '70%',
+    },
+    message: {
+        // maxWidth: '70%',
         backgroundColor: '#3a3b3c',
         color: '#fff',
         padding: 8,

@@ -5,16 +5,17 @@ import { Avatar, Caption, Drawer, Switch, Title, TouchableRipple, useTheme, Text
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/core'
 import { responsiveFontSize } from 'react-native-responsive-dimensions';
-import { AuthContext } from '../context/Context';
+import { useDispatch, useSelector } from 'react-redux';
+import { changeTheme } from '../redux/actions/themeAction';
+import { logout } from '../redux/actions/authAction';
 
 const MoreScreen = () => {
 
-    const { toggleTheme, signOut } = React.useContext(AuthContext);
+    const dispatch = useDispatch();
+    const isDarkTheme = useSelector(state => state.theme);
+
     const navigation = useNavigation();
     const theme = useTheme();
-    
-    const { isDarkTheme, setIsDarkTheme } = React.useState(false);
-    const [isUser, setIsUser] = React.useState(true);
 
     return (
         <View style={styles.container}>
@@ -65,7 +66,7 @@ const MoreScreen = () => {
                     </Drawer.Section>
 
                     <Drawer.Section title="Preferences">
-                        <TouchableRipple onPress={() => { toggleTheme() }}>
+                        <TouchableRipple onPress={() => { dispatch(changeTheme(!isDarkTheme)); }}>
                             <View style={styles.preference}>
                                 <PaperText style={styles.drawerItemLabel}>Chế độ tối</PaperText>
                                 <View pointerEvents="none">
@@ -92,7 +93,9 @@ const MoreScreen = () => {
                         styles.drawerItemLabel,
                         {color: theme.colors.error}
                     ]}
-                    onPress={() => { signOut() }}
+                    onPress={() => { 
+                        dispatch(logout());
+                    }}
                 />
             </Drawer.Section>
         </View>
