@@ -5,47 +5,55 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableHighlight } from 'react-native';
 import { Text as PaperText } from 'react-native-paper';
 import { responsiveFontSize, responsiveHeight } from "react-native-responsive-dimensions";
+import { useDispatch, useSelector } from 'react-redux';
+import { getMessagesByConversationId } from '../redux/actions/messagesAction';
 import BubbleAvatar from './BubbleAvatar';
 
 const ChatItem = ({ chatRoom }) => {
 
     const navigation = useNavigation();
     const theme = useTheme();
+    const dispatch = useDispatch();
 
-    const anotherUser = chatRoom.users[1];
-    if (anotherUser.id === 'u1')
-        return null;
+    const { user, token } = useSelector(state => state.auth)
 
-    const onPress = () => {
-        navigation.navigate('ChatScreen', { chatRoom: chatRoom })
+    const otherUser = chatRoom.member.find( itemUser => itemUser._id != user._id );
+    const otherUserProfilePicture = 'https://sothis.es/wp-content/plugins/all-in-one-seo-pack/images/default-user-image.png';
+    if(otherUser != undefined && otherUser.profilePicture != '')
+        otherUserProfilePicture = otherUser.profilePicture;
+
+    const openChatRoom = () => {
+        dispatch(getMessagesByConversationId(chatRoom._id, token))
+        navigation.navigate('ChatScreen')
     }
 
     return (
         <TouchableHighlight
             underlayColor={theme.dark ? "#333" : '#e6e6e6'}
-            onPress={onPress}
+            onPress={openChatRoom}
         >
             <View style={styles.container}>
-                <BubbleAvatar user={anotherUser} />
+                <BubbleAvatar user={otherUser} />
                 <View style={styles.chatContent}>
                     <PaperText style={[styles.userName]}>
-                        {anotherUser.name}
+                        {otherUser.username}
                     </PaperText>
                     <View style={styles.messageWrapper}>
                         <PaperText style={[styles.lastMessage]}>
-                            {chatRoom.lastMessage.content}
+                            {/* {chatRoom.lastMessage.content} */}
+                            Chưa lấy tin nhắn cuối cùng
                         </PaperText>
                         <PaperText style={[styles.dotSpace, styles.text]}>.</PaperText>
                         <PaperText style={[styles.createdAt, styles.text]}>
-                            {moment(chatRoom.lastMessage.createdAt).format('HH:mm')}
-                            {/* cap nhat */}
+                            {/* {moment(chatRoom.lastMessage.createdAt).format('HH:mm')} */}
+                            cap nhat
                         </PaperText>
                     </View>
                 </View>
                 <View style={styles.seenWrapper}>
                     <Image
                         source={{
-                            uri: '' + anotherUser.imageUri,
+                            uri: '' + otherUserProfilePicture,
                         }}
                         style={styles.seenIcon}
                     />

@@ -4,6 +4,8 @@ import alertReducer from './alertReducer'
 import showMenuReducer from './showmenuReducer'
 import themeReducer from './themeReducer'
 import conversationsReducer from './conversationsReducer'
+import messagesReducer from './messagesReducer'
+import currentConversationReducer from './currentConversationReducer'
 
 const rootReducer = combineReducers({
     auth: authReducer,
@@ -11,11 +13,10 @@ const rootReducer = combineReducers({
     showMenu: showMenuReducer,
     theme: themeReducer,
     conversations: conversationsReducer,
+    messages: messagesReducer,
+    currentConversation: currentConversationReducer,
     // theme: themeRe
-    // conversations:conversationsReducer,
     // user:userReducer,
-    // currentConversation:currentConversationReducer,
-    // messages:messagesReducer,
     // modal:modalReducer,
     // socket:socketReducer,
 })

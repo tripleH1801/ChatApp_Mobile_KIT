@@ -83,9 +83,12 @@ export const logout = () => async (dispatch) => {
 
 }
 
-export const saveToken = (token) => async (dispatch) => {
+export const retrieveAuth = (user, token) => async (dispatch) => {
     dispatch({
-        type: GLOBALTYPES.SAVETOKEN,
-        payload: token
+        type: GLOBALTYPES.AUTH,
+        payload: {
+            token: token,
+            user: user
+        }
     })
 }

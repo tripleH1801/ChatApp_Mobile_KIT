@@ -188,18 +188,19 @@ const listChats = [{
 }]
 
 
-const ListChatRooms = () => {
+const ListChatRooms = () => { 
   const conversations = useSelector(state => state.conversations.data);
   console.log('ListChatrooms da lay dc danh sach chats: ', conversations);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <FlatList
-        data={listChats}
+        data={conversations}
         renderItem={({ item }) =>
           <ChatItem chatRoom={item} />
         }
         scrollEnabled={false}
+        keyExtractor={(item, index) => index.toString()}
       />
     </SafeAreaView>
   )

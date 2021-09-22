@@ -13,7 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import RootNavigation from './screens/RootNavigation';
 import RootAuthenication from './screens/RootAuthenication';
 import { useDispatch, useSelector } from 'react-redux';
-import { saveToken } from './redux/actions/authAction';
+import { retrieveAuth } from './redux/actions/authAction';
 import { getConversationsByUserId } from './redux/actions/conversationsAction';
 
 const Root = () => {
@@ -155,10 +155,13 @@ const Root = () => {
     useEffect(() => {
         let userToken;
         userToken = null;
+        let userStringify = null;
         setTimeout(async () => {
             try {
                 userToken = await AsyncStorage.getItem('AccessToken');
-                dispatch(saveToken(userToken));
+                userStringify = await AsyncStorage.getItem('User');
+
+                dispatch(retrieveAuth(JSON.parse(userStringify), userToken));
             } catch (e) {
                 console.log(e);
             }
@@ -168,11 +171,11 @@ const Root = () => {
     useEffect(() => {
         if (user) {
             try {
-                dispatch(getConversationsByUserId(user._id, token))
+                dispatch(getConversationsByUserId(user._id, token));
             } catch (error) {
                 console.log(error);
             }
-            console.log('Root: da co user');
+            console.log('Root: da co user', user);
         }
         else{
             console.log('Root: user null');

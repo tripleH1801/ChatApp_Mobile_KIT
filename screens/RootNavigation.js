@@ -59,8 +59,9 @@ const RootNavigation = () => {
             />
 
             <Stack.Screen
-                options={({ route }) => ({
-                    title: route.params.chatRoom.users[1].name,
+                options={() => ({
+                    // title: route.params.chatRoom.users[1].name,
+                    title: 'dang cap nhan phan nay',
                     headerTitleStyle: {
                         fontWeight: '600',
                         // color: '#fff',
@@ -68,14 +69,14 @@ const RootNavigation = () => {
                     headerStyle: {
                         // backgroundColor: '#000'
                     },
-                    headerLeft: () => <ChatLeftHeader otherUser={route.params.chatRoom.users[1]} />,
-                    headerLeftContainerStyle: {
-                        backgroundColor: 'transparent'
-                    },
-                    headerRight: () => <ChatRightHeader chatRoomID={route.params.chatRoom.id} />,
-                    headerRightContainerStyle: {
-                        backgroundColor: 'transparent'
-                    },
+                    // headerLeft: () => <ChatLeftHeader otherUser={route.params.chatRoom.users[1]} />,
+                    // headerLeftContainerStyle: {
+                    //     backgroundColor: 'transparent'
+                    // },
+                    // headerRight: () => <ChatRightHeader chatRoomID={route.params.chatRoom.id} />,
+                    // headerRightContainerStyle: {
+                    //     backgroundColor: 'transparent'
+                    // },
                 })}
                 name='ChatScreen'
                 component={ChatScreen}

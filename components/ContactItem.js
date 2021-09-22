@@ -14,7 +14,7 @@ const ContactItem = ({ contact }) => {
 
     return (
         <View style={styles.container}>
-            <BubbleAvatar user={anotherUser} />
+            {/* <BubbleAvatar user={anotherUser} /> */}
             <View style={styles.infoWrapper}>
                 <Text style={styles.userName}>{contact.name}</Text>
                 <Text style={styles.userNumbers}>{contact.phoneNumber}</Text>
