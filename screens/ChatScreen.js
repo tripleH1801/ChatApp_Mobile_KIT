@@ -1,68 +1,150 @@
-import { useRoute } from '@react-navigation/core'
-import React, { useEffect, useRef } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
-import { Text as PaperText } from 'react-native-paper'
-import { FlatList, ScrollView } from 'react-native-gesture-handler'
-import ChatInput from '../components/ChatInput'
-import Message from '../components/Message'
-import { useSelector } from 'react-redux'
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
+import { useDispatch, useSelector } from "react-redux";
+
+import FilePickerExt from "../components/ChatExtension/FilePickerExt";
+import ImagePickerExt from "../components/ChatExtension/ImagePickerExt";
+import ChatInput from "../components/ChatInput";
+import Message from "../components/Message";
+import { getMessagesByConversationId } from "../redux/actions/messagesAction";
+import EmojiPicker from "rn-emoji-keyboard";
 
 const ChatScreen = () => {
+  const [page, setPage] = useState(1);
+  const [isLoading, setIsloading] = useState(false);
+  const [currentLength, setCurrentLength] = useState(0);
+  const [updateLength, setUpdateLength] = useState(1);
 
-    const messages = useSelector(state => state.messages.data);
-    const conversations = useSelector(state => state.conversations.data);
-    console.log(conversations);
+  const { user, token } = useSelector((state) => state.auth);
+  const messages = useSelector((state) => state.messages.data);
+  const conversation = useSelector(
+    (state) => state.currentConversationsReducer.data
+  );
+  const [showEmoji, setShowEmoji] = useState(false);
+  const [messagesEmoji, setmessagesEmoji] = useState("");
 
-    // const chatMessages = databaseListMessage[0];
-    // số âm vì load từ tin nhắn mới nhất (từ cuối danh sách messages).
-    // const LOAD_MESSAGE_COUNT = -10;
-    // let messages = [];
-    // if (chatMessages != undefined) {
-    //     messages = chatMessages.messages.slice(LOAD_MESSAGE_COUNT);
-    // }
+  const dispatch = useDispatch();
 
-    return (
-        <View
-            style={styles.container}
-        >
-            <View
-                style={styles.messagesComponent}
-            >
-                {2 <= 0 ? //messages.member.length
-                    <View
-                        style={{ justifyContent: 'center', alignItems: 'center', height: '100%' }}
-                    >
-                        <PaperText>Bạn chưa có tin nhắn với người này</PaperText>
-                    </View> :
-                    <FlatList
-                        inverted //auto nằm cuối danh sách?
-                        data={messages.reverse()}
-                        renderItem={({ item }) => (
-                            <Message
-                                message={item}
-                            />
-                        )}
-                        keyExtractor={(item, index) => index.toString()}
-                    />
-                }
+  useEffect(() => {
+    setIsloading(true);
 
-                <View style={{ flex: 10000 }}></View>
-            </View>
-            <ChatInput />
+    const stopLoading = setTimeout(() => {
+      setIsloading(false);
+    }, 500);
+
+    if (conversation) {
+      !isLoading && setIsloading(true);
+      dispatch(
+        getMessagesByConversationId(conversation._id, token, page, {
+          setIsloading: stopLoading,
+          setUpdateLength: setUpdateLength,
+        })
+      );
+    }
+
+    return () => {
+      clearTimeout(stopLoading);
+      setIsloading(false);
+    };
+  }, [page]);
+
+  const { name, isActive } = useSelector((state) => state.extensions);
+  let renderMessages = [];
+
+  if (messages != undefined) {
+    renderMessages = messages.slice();
+  }
+
+  const handleLoadMore = async () => {
+    if (currentLength != updateLength) {
+      !isLoading && setIsloading(true);
+      setPage(page + 1);
+      setCurrentLength(updateLength);
+    }
+  };
+
+  const renderLoading = () => {
+    return isLoading ? (
+      <View style={{ marginVertical: 10 }}>
+        <ActivityIndicator size="large" color="gray" />
+      </View>
+    ) : null;
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.messagesComponent}>
+        <View>
+          <FlatList
+            inverted
+            data={renderMessages.reverse()}
+            renderItem={({ item, index }) => {
+              return (
+                <Message
+                  message={item}
+                  isGroup={conversation?.label != undefined}
+                />
+              );
+            }}
+            keyExtractor={(item, index) => index.toString()}
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.1}
+            updateCellsBatchingPeriod={2}
+            // -------
+            // initialNumToRender={3}
+            ListFooterComponent={renderLoading}
+            removeClippedSubviews={true}
+          />
         </View>
-    )
-}
+
+        <View style={{ flex: 10000 }}></View>
+      </View>
+      <ChatInput
+        conversationId={conversation?._id}
+        user={user}
+        messagesEmoji={messagesEmoji}
+        setShowEmoji={setShowEmoji}
+        showEmoji={showEmoji}
+      />
+
+      <EmojiPicker
+        onEmojiSelected={(emoji) => setmessagesEmoji(emoji.emoji)}
+        open={showEmoji}
+        onClose={() => setShowEmoji(false)}
+      />
+
+      {renderExtension(name, isActive)}
+    </View>
+  );
+};
+
+// da thay doi
+const renderExtension = (name, isActive) => {
+  switch (name) {
+    case "OPEN_IMAGE":
+      if (isActive) return <ImagePickerExt />;
+
+    case "OPEN_FILE":
+      if (isActive) return <FilePickerExt />;
+  }
+};
 
 const styles = StyleSheet.create({
-    container: {
-        height: '100%',
-        flexDirection: 'column',
-        justifyContent: 'space-between'
-    },
-    messagesComponent: {
-        flex: 1,
-        justifyContent: 'space-between',
-        flexDirection: 'column',
-    }
-})
-export default ChatScreen
+  container: {
+    height: "100%",
+    flexDirection: "column",
+    justifyContent: "space-between",
+  },
+  messagesComponent: {
+    flex: 1,
+    justifyContent: "space-between",
+    flexDirection: "column",
+  },
+  emojis: {
+    position: "absolute",
+    height: 300,
+    width: "100%",
+  },
+});
+export default ChatScreen;

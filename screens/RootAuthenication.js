@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import LoginScreen from './LoginScreen';
 import RegisterScreen from './RegisterScreen';
+import ResetPasswordScreen from './ResetPasswordScreen';
 
 const Stack = createStackNavigator();
 
@@ -29,6 +30,16 @@ const RootAuthenication = () => {
                 }
                 name='RegisterScreen'
                 component={RegisterScreen}
+            />
+
+            <Stack.Screen
+                options={
+                    ({ navigation }) => ({
+                        headerShown: false
+                    })
+                }
+                name='ResetPasswordScreen'
+                component={ResetPasswordScreen}
             />
 
         </Stack.Navigator>

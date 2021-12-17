@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { TouchableOpacity, StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import Background from '../components/Background'
@@ -9,19 +9,17 @@ import { theme } from '../core/theme'
 import { useNavigation } from '@react-navigation/core'
 import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../redux/actions/authAction'
-// import { AuthContext } from '../context/Context'
 // import { emailValidator } from '../helpers/emailValidator'
 // import { passwordValidator } from '../helpers/passwordValidator'
 
 export default function LoginScreen() {
     const dispatch = useDispatch();
-    const auth = useSelector(state => state.auth);
+    const {auth} = useSelector(state => state);
 
     const [phoneNumber, setPhoneNumber] = useState({ value: '', error: '' })
     const [password, setPassword] = useState({ value: '', error: '' })
 
     const navigation = useNavigation();
-    // const { signIn } = React.useContext(AuthContext);
 
     const onLoginPressed = () => {
         const dataLogin = {
@@ -30,6 +28,13 @@ export default function LoginScreen() {
         }
         dispatch(login(dataLogin));
     }
+
+    useEffect(() => {
+        if (auth?.token) { 
+            navigation.navigate('MainTab')
+        }
+      }, [auth,dispatch]);
+    
 
     return (
         <Background>
@@ -45,7 +50,7 @@ export default function LoginScreen() {
                 autoCapitalize="none"
                 autoCompleteType="email"
                 textContentType="emailAddress"
-                keyboardType="email-address"
+                keyboardType="numeric"
             />
             <TextInput
                 label="Mật khẩu"

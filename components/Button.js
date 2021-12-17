@@ -1,9 +1,10 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import { Button as PaperButton } from 'react-native-paper'
-import { theme } from '../core/theme'
+import { useTheme } from '@react-navigation/native';
 
 export default function Button({ mode, style, ...props }) {
+  const theme = useTheme();
   return (
     <PaperButton
       style={[
@@ -28,5 +29,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 15,
     lineHeight: 26,
+    color: "#fff"
   },
 })

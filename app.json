@@ -1,15 +1,29 @@
 {
   "expo": {
-    "name": "KIT_APP",
-    "slug": "KIT_APP",
+    "name": "ZAHOO",
+    "slug": "zahoo",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo1.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/logo1.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/logo1.png",
+          "color": "#ffffff",
+          "sounds": [
+            "./local/assets/ringring.mp3",
+            "./local/assets/ringring.mp3"
+          ],
+          "mode": "production"
+        }
+      ]
+    ],
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -21,10 +35,27 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/logo1.png",
         "backgroundColor": "#FFFFFF"
       },
-      "permissions" : ["READ_CONTACTS", "CAMERA", "CAMERA_ROLL", "WRITE_EXTERNAL_STORAGE", "READ_EXTERNAL_STORAGE", "MEDIA_LIBRARY"]
+      "permissions": [
+        "CAMERA",
+        "CAMERA_ROLL",
+        "INTERNET",
+        "MEDIA_LIBRARY",
+        "MODIFY_AUDIO_SETTINGS",
+        "READ_CONTACTS",
+        "READ_EXTERNAL_STORAGE",
+        "RECORD_AUDIO",
+        "SYSTEM_ALERT_WINDOW",
+        "VIBRATE",
+        "WRITE_CONTACTS",
+        "WRITE_EXTERNAL_STORAGE",
+        "ACCESS_NETWORK_STATE",
+        "BLUETOOTH",
+        "WAKE_LOCK"
+      ],
+      "package": "com.soeren321.expoejected"
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -1,17 +1,21 @@
 import React from 'react'
-import { ImageBackground, StyleSheet, KeyboardAvoidingView } from 'react-native'
+import { ImageBackground, StyleSheet, KeyboardAvoidingView, View } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { theme } from '../core/theme'
 
 export default function Background({ children }) {
   return (
+
     <ImageBackground
       source={require('../assets/background_dot.png')}
       resizeMode="repeat"
       style={styles.background}
     >
-      <KeyboardAvoidingView style={styles.container}>
-        {children}
-      </KeyboardAvoidingView>
+      <KeyboardAwareScrollView >
+        <View style={styles.container}>
+          {children}
+        </View>
+      </KeyboardAwareScrollView>
     </ImageBackground>
   )
 }
@@ -20,7 +24,8 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
     width: '100%',
-    // backgroundColor: theme.colors.surface,
+    height: '100%',
+    paddingTop: 90
   },
   container: {
     flex: 1,

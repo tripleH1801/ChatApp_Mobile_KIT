@@ -1,25 +1,27 @@
 import React from 'react'
-import { View, Text, StyleSheet, LogBox } from 'react-native'
+import { View, Text, StyleSheet, LogBox, SafeAreaView, StatusBar } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
+import ListChatRooms from '../components/ListChatRooms'
+import HeaderSearchBar from '../components/HeaderSearchBar'
+import HeaderScreenGroup from '../components/HeaderScreenGroup'
 
 const GroupChatsScreen = () => {
-    LogBox.ignoreLogs([
-        'VirtualizedLists should never be nested',
-    ])
+
     return (
-        <View style={styles.container}>
-            <Text style={styles.text}>LISt group chat</Text>
-        </View>
+        <SafeAreaView style={styles.container}>
+            {/* <HeaderScreenGroup /> */}
+            <HeaderSearchBar />
+
+            <ScrollView>
+                <ListChatRooms isGroupChat={true} />
+            </ScrollView>
+        </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
-    text:{
-        color: '#fff'
-    },
     container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        // marginTop: StatusBar.currentHeight
     }
 })
 
